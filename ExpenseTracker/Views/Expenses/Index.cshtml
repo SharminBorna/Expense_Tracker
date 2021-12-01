@@ -1,0 +1,104 @@
+﻿@model IEnumerable<ExpenseTracker.Models.Expense>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="row">
+    <div class="col">
+        <div class="card shadow-lg mt-2">
+            <div class="card-header shadow">
+                <h2 class="float-left">Expense List</h2>
+                <div class="d-flex justify-content-end">
+                    <a asp-action="Create" asp-controller="Expenses" class="btn btn-success"><i class="fa fa-plus"></i></a>
+                </div>
+            </div>
+            <div class="card-body">
+                <table class="table table-hover text-center table-sm mt-2">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ItemName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Amount)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ExpenseDate)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Category)
+                            </th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ItemName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Amount)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ExpenseDate)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Category.CategoryName)
+                                </td>
+                                <td>
+                                    <a asp-action="Edit" asp-controller="Expenses" asp-route-id="@item.ItemId" class="btn btn-success shadow btn-sm"><i class="fa fa-pencil"></i></a>
+                                    <a asp-action="Details" asp-controller="Expenses" asp-route-id="@item.ItemId" class="btn btn-info shadow btn-sm"><i class="fa fa-eye"></i></a>
+                                    <a asp-action="Delete" asp-controller="Expenses" asp-route-id="@item.ItemId" class="btn btn-danger shadow btn-sm btnDelete"><i class="fa fa-trash"></i></a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts
+
+{
+    <script>
+        $('.btnDelete').on('click', function (event) {
+            event.preventDefault();
+            const url = $(this).attr('href');
+            const id = $(this).closest('tr').attr('id');
+            swal({
+                title: "Are you sure?",
+                text: "Once deleted, you will not be able to recover this record!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            }).then(function (value) {
+                if (value) {
+                    swal({
+                        title: 'Please wait',
+                        text: 'This item is being deleted!',
+                        icon: 'info',
+                        buttons: false,
+                    });
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        dataType: 'html'
+                    }).done(function (data) {
+                        setTimeout(function () {
+                            swal("Deleted!", "The record has been deleted.", "success").then(function () {
+                                $("tr[id='" + id + "']").remove();
+                                location.reload();
+                            });
+                        }, 2000);
+                    }).fail(function () {
+                        swal("Deleted_Error", "Error while deleting. :(", "error");
+                    });
+                }
+            });
+        });
+    </script>
+}

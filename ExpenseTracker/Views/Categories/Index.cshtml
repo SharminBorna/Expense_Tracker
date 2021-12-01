@@ -1,0 +1,96 @@
+﻿@model IEnumerable<ExpenseTracker.Models.Category>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class=" breadcrumb-section">
+    <div class="container text-center">
+        <h1 class="display-4">Category List</h1>
+    </div>
+</div>
+<hr />
+
+<div class="row">
+    <div class="col">
+        <form asp-controller="Categories" asp-action="Index" method="post" class="d-inline float-left ml-4">
+            <div class="input-group col-xl-12">
+                <input type="text" class="form-control" placeholder="Search Categories" name="usertext" />
+                <div class="input-group-btn">
+                    <button class="btn btn-info" type="submit"><i class="fa fa-search"></i> Search</button>
+                </div>
+            </div>
+        </form>
+        <div class="d-flex justify-content-end mr-xl-5">
+            <a asp-action="Create" asp-controller="Categories" class="btn btn-info"><i class="fa fa-plus"></i> Add new category</a>
+        </div>
+    </div>
+</div>
+<div style="margin-top:60px">
+    <div class="row ml-4 mr-4 my-4">
+        @foreach (var item in Model)
+        {
+        <div class="card ml-3 mb-3" style="width: 12rem; height: 18rem;">
+            <img src="~/Images/expense-manager-22.png" class="card-img-top" alt="..." width="100" height="160" />
+            <div class="card-body">
+                <h5 class="card-title" style="font-size:larger; font-family:'Lucida Calligraphy'; font-weight:500">@item.CategoryName</h5>
+                <hr>
+                <p class="card-text"></p>
+                <a asp-action="Edit" asp-controller="Categories" asp-route-id="@item.CategoryId" class="btn btn-success btn-sm"><i class="fa fa-pencil"></i></a>
+                <a asp-action="Details" asp-controller="Categories" asp-route-id="@item.CategoryId" class="btn btn-info btn-sm"><i class="fa fa-eye"></i></a>
+                <a asp-action="Delete" asp-controller="Categories" asp-route-id="@item.CategoryId" class="btn btn-danger btn-sm btnDelete"><i class="fa fa-trash"></i></a>
+            </div>
+        </div>
+        }
+
+    </div>
+</div>
+@section Scripts{
+    <script type="text/javascript">
+        $('.card').hover(
+            function () {
+                $(this).animate({ marginTop: "-=1%", marginBottom: "+=1%" }, 200)
+            },
+            function () {
+                $(this).animate({ marginTop: "+=1%", marginBottom: "-=1%" }, 200)
+            }
+        )
+    </script>
+    <script>
+        $('.btnDelete').on('click', function (event) {
+            event.preventDefault();
+            const url = $(this).attr('href');
+            const id = $(this).closest('tr').attr('id');
+            swal({
+                title: "Are you sure?",
+                text: "Once deleted, you will not be able to recover this record!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            }).then(function (value) {
+                if (value) {
+                    swal({
+                        title: 'Please wait',
+                        text: 'This item is being deleted!',
+                        icon: 'info',
+                        buttons: false,
+                    });
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        dataType: 'html'
+                    }).done(function (data) {
+                        setTimeout(function () {
+                            swal("Deleted!", "The record has been deleted.", "success").then(function () {
+                                $("tr[id='" + id + "']").remove();
+                                location.reload();
+                            });
+                        }, 2000);
+                    }).fail(function () {
+                        swal("Deleted_Error", "Error while deleting. :(", "error");
+                    });
+                }
+            });
+        });
+    </script>
+}

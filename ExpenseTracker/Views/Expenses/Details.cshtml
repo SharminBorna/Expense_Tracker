@@ -1,0 +1,51 @@
+﻿@model ExpenseTracker.Models.Expense
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<div class="row">
+    <div class="col-md-8 offset-2">
+        <div class="card card rounded shadow-lg">
+            <div class="card-header shadow">
+                <h2 class="float-left">Details of @Model.ItemName</h2>
+                <div class="d-flex justify-content-end">
+                    <a asp-action="Index" asp-controller="Expenses" class="btn btn-info btn-sm rounded shadow-sm">
+                        <i class="fa fa-backward"></i> Back to List
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.ItemName)
+                    </dt>
+                    <dd class="col-sm-8">
+                        <strong>@Html.DisplayFor(model => model.ItemName)</strong>
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.Amount)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Html.DisplayFor(model => model.Amount)
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.ExpenseDate)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Html.DisplayFor(model => model.ExpenseDate)
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.Category)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Html.DisplayFor(model => model.Category.CategoryName)
+                    </dd>
+                </dl>
+            </div>
+            <div class="card-footer">
+                <a asp-action="Edit" asp-controller="Expenses" asp-route-id="@Model.ItemId" class="btn btn-success shadow btn-sm w-25"><i class="fa fa-pencil"></i> Edit</a>
+            </div>
+        </div>
+    </div>
+</div>
